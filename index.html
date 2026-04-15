@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SeguroMX — Seguridad Ciudadana</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ========== GLOBAL RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: #0a0c10;
+  color: #e8eaf0;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+/* ========== NAV BAR ========== */
+#nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  background: rgba(8, 12, 20, 0.97);
+  border-top: 1px solid rgba(0,200,255,0.12);
+  backdrop-filter: blur(20px);
+  height: 62px;
+}
+
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 2px;
+  border-radius: 0 0 3px 3px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.nav-btn.active { color: #fff; }
+.nav-btn.active::before { background: var(--nav-color, #00c8ff); }
+
+.nav-btn .nav-icon {
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.nav-btn.active .nav-icon { transform: scale(1.15); }
+
+/* ========== PAGES ========== */
+.page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  bottom: 62px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.page.active { display: block; }
+
+/* ========== PAGE 1: CONTACTOS ========== */
+#page-contactos {
+  background: #0a0c10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#page-contactos::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob-1 { width: 400px; height: 400px; background: #ff2e2e; top: -100px; left: -100px; }
+.blob-2 { width: 300px; height: 300px; background: #3b82f6; bottom: -80px; right: -80px; }
+
+.c-container {
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.c-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.c-shield {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 20px;
+  opacity: 0.9;
+}
+
+.c-header h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.c-header p {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.04em;
+}
+
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.em-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  height: 88px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: #111318;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s ease, box-shadow 0.25s ease;
+  isolation: isolate;
+}
+
+.em-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.em-btn::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -60%;
+  width: 40%;
+  height: 300%;
+  background: rgba(255,255,255,0.06);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.em-btn:hover::after { left: 160%; }
+
+.btn-911 { --e-accent: #ff2e2e; --e-glow: rgba(255,46,46,0.35); --e-soft: rgba(255,46,46,0.08); }
+.btn-pc  { --e-accent: #f59e0b; --e-glow: rgba(245,158,11,0.35); --e-soft: rgba(245,158,11,0.08); }
+.btn-fis { --e-accent: #3b82f6; --e-glow: rgba(59,130,246,0.35); --e-soft: rgba(59,130,246,0.08); }
+
+.em-btn::before { background: var(--e-soft); }
+
+.em-btn:hover {
+  transform: translateY(-3px) scale(1.01);
+  border-color: var(--e-accent);
+  box-shadow: 0 0 0 1px var(--e-accent), 0 8px 40px var(--e-glow), 0 2px 8px rgba(0,0,0,0.4);
+}
+.em-btn:hover::before { opacity: 1; }
+.em-btn:active { transform: translateY(0) scale(0.99); transition-duration: 0.1s; }
+
+.e-btn-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-right: 20px;
+  position: relative; z-index: 2;
+  transition: border-color 0.25s, background 0.25s;
+}
+.em-btn:hover .e-btn-icon {
+  border-color: var(--e-accent);
+  background: color-mix(in srgb, var(--e-accent) 15%, transparent);
+}
+.e-btn-icon svg { width: 20px; height: 20px; stroke: rgba(255,255,255,0.35); transition: stroke 0.25s; }
+.em-btn:hover .e-btn-icon svg { stroke: var(--e-accent); }
+
+.e-btn-text { display: flex; flex-direction: column; position: relative; z-index: 2; }
+
+.e-btn-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  letter-spacing: 0.1em;
+  color: #fff;
+  line-height: 1;
+  transition: color 0.25s;
+}
+.em-btn:hover .e-btn-label { color: var(--e-accent); }
+
+.e-btn-sub {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  margin-top: 4px;
+  transition: color 0.25s;
+}
+.em-btn:hover .e-btn-sub { color: rgba(255,255,255,0.5); }
+
+.e-btn-arrow {
+  margin-left: auto;
+  position: relative; z-index: 2;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+.e-btn-arrow svg { width: 18px; height: 18px; stroke: var(--e-accent); }
+.em-btn:hover .e-btn-arrow { opacity: 1; transform: translateX(0); }
+
+.pulse-dot { position: absolute; top: 14px; right: 16px; z-index: 3; }
+.pulse-dot span {
+  display: block; width: 8px; height: 8px;
+  border-radius: 50%; background: #ff2e2e; position: relative;
+}
+.pulse-dot span::before {
+  content: '';
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  border: 1px solid #ff2e2e;
+  animation: c-pulse 2s ease-out infinite;
+}
+@keyframes c-pulse {
+  0%   { opacity: 0.8; transform: scale(0.8); }
+  100% { opacity: 0;   transform: scale(2.2); }
+}
+
+.c-footer {
+  text-align: center;
+  margin-top: 36px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ========== PAGE 2: INCIDENT REPORT ========== */
+#page-report {
+  background: #0a0c10;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(255,77,77,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 10% 80%, rgba(255,140,66,0.04) 0%, transparent 60%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.r-shell {
+  width: 100%;
+  max-width: 520px;
+}
+
+.r-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+}
+
+.r-shield {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #ff4d4d, #ff8c42);
+  clip-path: polygon(50% 0%, 100% 20%, 100% 60%, 50% 100%, 0% 60%, 0% 20%);
+  flex-shrink: 0;
+  animation: r-pulse-shield 3s ease-in-out infinite;
+}
+@keyframes r-pulse-shield {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.96); }
+}
+
+.r-header-text h1 { font-size: 18px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; font-family: 'Syne', sans-serif; }
+.r-header-text p  { font-size: 12px; color: #6b7280; font-family: 'DM Mono', monospace; letter-spacing: 0.03em; }
+
+.r-progress-wrap { margin-bottom: 36px; }
+.r-progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.r-progress-label { font-size: 11px; font-family: 'DM Mono', monospace; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; }
+.r-progress-steps { font-size: 11px; font-family: 'DM Mono', monospace; color: #ff4d4d; }
+.r-progress-track { height: 4px; background: #1a1d26; border-radius: 2px; overflow: hidden; position: relative; }
+.r-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4d4d, #ff8c42);
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.r-progress-fill::after {
+  content: ''; position: absolute; right: 0; top: -2px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ff8c42; box-shadow: 0 0 8px #ff8c42;
+}
+.r-step-dots { display: flex; gap: 6px; margin-top: 10px; }
+.r-dot { flex: 1; height: 2px; border-radius: 2px; background: #252836; transition: background 0.4s ease; }
+.r-dot.active { background: #ff4d4d; }
+.r-dot.done { background: rgba(255,77,77,0.35); }
+
+.r-card {
+  background: #111318;
+  border: 1px solid #252836;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.r-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,77,77,0.4), transparent);
+}
+
+.r-step { display: none; animation: r-fadeSlide 0.35s ease; }
+.r-step.active { display: block; }
+@keyframes r-fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.r-step-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.01em; font-family: 'Syne', sans-serif; }
+.r-step-sub   { font-size: 13px; color: #6b7280; margin-bottom: 28px; font-family: 'DM Mono', monospace; }
+
+.r-incident-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.r-incident-btn {
+  background: #1a1d26; border: 1px solid #252836; border-radius: 12px;
+  padding: 16px 14px; cursor: pointer; transition: all 0.2s ease;
+  text-align: left; color: #e8eaf0; font-family: 'Syne', sans-serif;
+}
+.r-incident-btn:hover { border-color: rgba(255,77,77,0.5); background: rgba(255,77,77,0.07); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.r-incident-btn.selected { border-color: #ff4d4d; background: rgba(255,77,77,0.1); box-shadow: 0 0 0 1px rgba(255,77,77,0.3), 0 8px 24px rgba(0,0,0,0.3); }
+.r-incident-icon  { font-size: 24px; margin-bottom: 8px; display: block; }
+.r-incident-label { font-size: 13px; font-weight: 600; display: block; }
+.r-incident-desc  { font-size: 11px; color: #6b7280; margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+.r-field-label { font-size: 12px; font-family: 'DM Mono', monospace; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display: block; }
+#r-description {
+  width: 100%; background: #1a1d26; border: 1px solid #252836; border-radius: 12px;
+  padding: 16px; color: #e8eaf0; font-family: 'Syne', sans-serif; font-size: 14px;
+  resize: none; outline: none; transition: all 0.2s ease; line-height: 1.6;
+}
+#r-description:hover { border-color: rgba(255,77,77,0.4); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+#r-description:focus { border-color: #ff4d4d; box-shadow: 0 0 0 3px rgba(255,77,77,0.12); }
+#r-description::placeholder { color: #6b7280; }
+
+.r-action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.r-action-btn {
+  background: #1a1d26; border: 1px dashed #252836; border-radius: 12px;
+  padding: 18px 14px; cursor: pointer; color: #e8eaf0; font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 600; display: flex; flex-direction: column; align-items: center;
+  gap: 8px; transition: all 0.25s ease;
+}
+.r-action-btn:hover { border-color: #ff4d4d; border-style: solid; background: rgba(255,77,77,0.06); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.35); }
+.r-action-btn.done { border-color: #22c55e; border-style: solid; background: rgba(34,197,94,0.07); color: #22c55e; }
+.r-action-icon  { font-size: 22px; }
+.r-action-label { font-size: 12px; }
+
+.r-review-item { background: #1a1d26; border: 1px solid #252836; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.r-review-key  { font-size: 10px; font-family: 'DM Mono', monospace; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+.r-review-val  { font-size: 14px; font-weight: 600; word-break: break-word; }
+.r-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,77,77,0.12); border: 1px solid rgba(255,77,77,0.25); border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #ff4d4d; font-family: 'DM Mono', monospace; }
+
+.r-footer { margin-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+.r-back-btn {
+  background: none; border: 1px solid #252836; border-radius: 10px; padding: 12px 20px;
+  color: #6b7280; font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s ease;
+}
+.r-back-btn:hover { border-color: #e8eaf0; color: #e8eaf0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.r-back-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+.r-next-btn {
+  background: linear-gradient(135deg, #ff4d4d, #ff8c42); border: none; border-radius: 10px;
+  padding: 14px 28px; color: #fff; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.04em; transition: all 0.25s ease; position: relative; overflow: hidden;
+}
+.r-next-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent); opacity: 0; transition: opacity 0.2s; }
+.r-next-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(255,77,77,0.35); }
+.r-next-btn:hover::before { opacity: 1; }
+.r-next-btn:active { transform: translateY(0); }
+
+.r-success-screen { display: none; text-align: center; padding: 20px 0; }
+.r-success-screen.show { display: block; animation: r-fadeSlide 0.5s ease; }
+.r-success-ring {
+  width: 80px; height: 80px; border-radius: 50%; border: 3px solid #22c55e;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 32px;
+  animation: r-pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 30px rgba(34,197,94,0.3);
+}
+@keyframes r-pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.r-success-title { font-size: 26px; font-weight: 800; margin-bottom: 10px; font-family: 'Syne', sans-serif; }
+.r-success-sub   { color: #6b7280; font-size: 14px; font-family: 'DM Mono', monospace; margin-bottom: 24px; }
+.r-report-id { display: inline-block; background: #1a1d26; border: 1px solid #252836; border-radius: 8px; padding: 10px 18px; font-family: 'DM Mono', monospace; font-size: 13px; color: #ff4d4d; letter-spacing: 0.1em; }
+
+/* ========== PAGE 3: MAPA ========== */
+#page-mapa {
+  background: #040810;
+  overflow: hidden;
+}
+
+/* Header */
+#m-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px;
+  background: linear-gradient(180deg, rgba(4,8,16,0.98) 0%, rgba(4,8,16,0.7) 100%);
+  border-bottom: 1px solid rgba(0,200,255,0.12);
+  backdrop-filter: blur(20px);
+}
+.m-logo { display: flex; align-items: center; gap: 10px; }
+.m-logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #00c8ff, #0066ff);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(0,200,255,0.4);
+}
+.m-logo-text {
+  font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px;
+  background: linear-gradient(90deg, #00c8ff, #ffffff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.m-logo-sub { font-size: 10px; color: #3d5a70; letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+.m-header-right { display: flex; align-items: center; gap: 16px; }
+.m-live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,59,92,0.1); border: 1px solid rgba(255,59,92,0.3);
+  border-radius: 20px; padding: 5px 12px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #ff3b5c; letter-spacing: 1px;
+}
+.m-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ff3b5c; animation: m-pulse-red 1.5s infinite; }
+@keyframes m-pulse-red { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+.m-stat-chip { display: flex; align-items: center; gap: 6px; background: #0d1825; border: 1px solid rgba(0,200,255,0.12); border-radius: 8px; padding: 6px 12px; font-size: 12px; }
+.m-stat-chip .num { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: #00c8ff; }
+.m-stat-chip .lbl { color: #7a9bb5; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Alert ribbon */
+.m-alert-ribbon {
+  position: absolute; top: 68px; left: 0; right: 0; z-index: 90;
+  display: flex; align-items: center;
+  background: rgba(255,59,92,0.08);
+  border-top: 1px solid rgba(255,59,92,0.2); border-bottom: 1px solid rgba(255,59,92,0.2);
+  padding: 7px 24px; gap: 10px; overflow: hidden;
+}
+.m-ribbon-icon { color: #ff3b5c; font-size: 13px; flex-shrink: 0; }
+.m-ribbon-scroll { display: flex; gap: 40px; animation: m-ribbon-scroll 25s linear infinite; white-space: nowrap; }
+@keyframes m-ribbon-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.m-ribbon-item { font-size: 11px; color: rgba(255,100,120,0.9); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px; }
+.m-ribbon-sep { color: rgba(255,59,92,0.3); }
+
+/* Map container */
+#m-map-container { position: absolute; inset: 0; overflow: hidden; }
+#m-svg-map { width: 100%; height: 100%; transition: transform 0.3s ease; transform-origin: center center; }
+.m-state { fill: #0a1520; stroke: rgba(0,200,255,0.2); stroke-width: 0.5; transition: fill 0.2s, filter 0.2s; cursor: pointer; }
+.m-state:hover { fill: #0d1e30; filter: drop-shadow(0 0 6px rgba(0,200,255,0.2)); }
+.m-grid-overlay {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none;
+}
+.m-scanline {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,200,255,0.15), transparent);
+  animation: m-scan 8s linear infinite; pointer-events: none; z-index: 5;
+}
+@keyframes m-scan { 0% { top: -10px; } 100% { top: 100%; } }
+
+/* Markers */
+.m-marker { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 20; transition: transform 0.2s ease; }
+.m-marker:hover { transform: translate(-50%, -50%) scale(1.3); z-index: 30; }
+.m-marker:hover .m-marker-pin { filter: brightness(1.4); }
+.m-marker-pin {
+  width: 28px; height: 28px; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg); display: flex; align-items: center; justify-content: center;
+  position: relative; transition: box-shadow 0.2s;
+}
+.m-marker-pin .m-icon { transform: rotate(45deg); font-size: 12px; line-height: 1; }
+.m-marker-pin::after {
+  content: ''; position: absolute; inset: -4px; border-radius: 50% 50% 50% 0;
+  border: 1px solid currentColor; opacity: 0.4; animation: m-marker-pulse 2s infinite;
+}
+@keyframes m-marker-pulse { 0% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0; } 100% { transform: scale(1); opacity: 0; } }
+
+.m-marker.m-crime .m-marker-pin    { background: #ff3b5c; box-shadow: 0 0 14px rgba(255,59,92,0.5), 0 4px 12px rgba(0,0,0,0.5); color: white; }
+.m-marker.m-road .m-marker-pin     { background: #ff8c00; box-shadow: 0 0 14px rgba(255,140,0,0.5), 0 4px 12px rgba(0,0,0,0.5); color: white; }
+.m-marker.m-power .m-marker-pin    { background: #f5c518; box-shadow: 0 0 14px rgba(245,197,24,0.5), 0 4px 12px rgba(0,0,0,0.5); color: #000; }
+.m-marker.m-light .m-marker-pin    { background: #a78bfa; box-shadow: 0 0 14px rgba(167,139,250,0.5), 0 4px 12px rgba(0,0,0,0.5); color: white; }
+.m-marker.m-suspicious .m-marker-pin { background: #fb7185; box-shadow: 0 0 14px rgba(251,113,133,0.5), 0 4px 12px rgba(0,0,0,0.5); color: white; }
+.m-marker.m-patrol .m-marker-pin   { background: #22c55e; box-shadow: 0 0 14px rgba(34,197,94,0.5), 0 4px 12px rgba(0,0,0,0.5); color: white; }
+
+/* Info card */
+.m-info-card {
+  position: absolute; z-index: 200; width: 260px;
+  background: rgba(8,15,26,0.96); border: 1px solid rgba(0,200,255,0.35); border-radius: 12px;
+  padding: 14px; pointer-events: none; opacity: 0;
+  transform: translateY(8px) scale(0.97); transition: all 0.2s ease;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,200,255,0.1);
+  display: none;
+}
+.m-info-card.visible { opacity: 1; transform: translateY(0) scale(1); display: block; }
+.m-card-top-line { height: 2px; border-radius: 2px 2px 0 0; position: absolute; top: 0; left: 0; right: 0; }
+.m-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.m-card-type { display: flex; align-items: center; gap: 7px; font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+.m-card-type-dot { width: 8px; height: 8px; border-radius: 50%; }
+.m-card-priority { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; font-weight: 500; }
+.m-priority-high   { background: rgba(255,59,92,0.2); color: #ff3b5c; border: 1px solid rgba(255,59,92,0.3); }
+.m-priority-medium { background: rgba(255,140,0,0.2); color: #ff8c00; border: 1px solid rgba(255,140,0,0.3); }
+.m-priority-low    { background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+.m-card-desc { font-size: 13px; color: #7a9bb5; line-height: 1.5; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,200,255,0.12); }
+.m-card-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.m-card-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.m-meta-label { font-size: 9px; color: #3d5a70; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'JetBrains Mono', monospace; }
+.m-meta-value { font-size: 12px; color: #e8f4ff; font-weight: 500; }
+
+/* Controls */
+.m-controls { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; }
+.m-ctrl-btn {
+  width: 44px; height: 44px; background: #0d1825; border: 1px solid rgba(0,200,255,0.12);
+  border-radius: 10px; color: #7a9bb5; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s; backdrop-filter: blur(10px);
+}
+.m-ctrl-btn:hover { background: #112032; border-color: #00c8ff; color: #00c8ff; box-shadow: 0 0 16px rgba(0,200,255,0.2); transform: translateX(-2px); }
+.m-ctrl-divider { width: 44px; height: 1px; background: rgba(0,200,255,0.12); }
+
+/* Legend */
+.m-legend {
+  position: absolute; bottom: 24px; left: 24px; z-index: 100;
+  background: rgba(8,15,26,0.92); border: 1px solid rgba(0,200,255,0.12);
+  border-radius: 12px; padding: 14px 16px; backdrop-filter: blur(20px); min-width: 200px;
+}
+.m-legend-title { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #3d5a70; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.m-legend-item { display: flex; align-items: center; gap: 9px; padding: 5px 0; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+.m-legend-item:hover { padding-left: 4px; }
+.m-legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.m-legend-label { font-size: 12px; color: #7a9bb5; }
+.m-legend-count { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #3d5a70; }
+
+/* Bottom bar */
+.m-bottom-bar {
+  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100;
+  display: flex; gap: 1px; background: rgba(0,200,255,0.08); border: 1px solid rgba(0,200,255,0.12);
+  border-radius: 12px; overflow: hidden; backdrop-filter: blur(20px);
+}
+.m-bottom-stat { padding: 10px 20px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: rgba(8,15,26,0.8); border-right: 1px solid rgba(0,200,255,0.12); min-width: 90px; }
+.m-bottom-stat:last-child { border-right: none; }
+.m-bottom-stat .n { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.m-bottom-stat .l { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #3d5a70; font-family: 'JetBrains Mono', monospace; }
+
+/* Compass */
+.m-compass {
+  position: absolute; top: 115px; right: 20px; z-index: 100;
+  width: 52px; height: 52px; background: #0d1825; border: 1px solid rgba(0,200,255,0.12);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px;
+  animation: m-compass-float 4s ease-in-out infinite;
+}
+@keyframes m-compass-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+</style>
+</head>
+<body>
+
+<!-- ===== PAGE 1: CONTACTOS ===== -->
+<div class="page active" id="page-contactos">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="c-container">
+    <div class="c-header">
+      <svg class="c-shield" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 4L6 12V24C6 33.9 14.1 43.2 24 46C33.9 43.2 42 33.9 42 24V12L24 4Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M18 24L22 28L30 20" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1>Contactos de Emergencia</h1>
+      <p>Selecciona el servicio que necesitas</p>
+    </div>
+    <div class="btn-group">
+      <a class="em-btn btn-911" href="tel:911">
+        <div class="pulse-dot"><span></span></div>
+        <div class="e-btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.75a16 16 0 006.34 6.34l1.07-1.07a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+        </div>
+        <div class="e-btn-text">
+          <span class="e-btn-label">911</span>
+          <span class="e-btn-sub">Emergencias generales</span>
+        </div>
+        <div class="e-btn-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      <a class="em-btn btn-pc" href="tel:800-0044-800">
+        <div class="e-btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="e-btn-text">
+          <span class="e-btn-label">Protección Civil</span>
+          <span class="e-btn-sub">Desastres y contingencias</span>
+        </div>
+        <div class="e-btn-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+      <a class="em-btn btn-fis" href="tel:800-0000-447">
+        <div class="e-btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+            <line x1="12" y1="12" x2="12" y2="16"/>
+            <line x1="10" y1="14" x2="14" y2="14"/>
+          </svg>
+        </div>
+        <div class="e-btn-text">
+          <span class="e-btn-label">Fiscalía</span>
+          <span class="e-btn-sub">Denuncia y procuración</span>
+        </div>
+        <div class="e-btn-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+    <div class="c-footer">Servicio disponible 24 / 7 · Uso exclusivo para emergencias</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 2: INCIDENT REPORT ===== -->
+<div class="page" id="page-report">
+  <div class="r-shell">
+    <div id="r-mainContent">
+      <div class="r-header">
+        <div class="r-shield"></div>
+        <div class="r-header-text">
+          <h1>SecureAlert</h1>
+          <p>Assisted Incident Report</p>
+        </div>
+      </div>
+      <div class="r-progress-wrap">
+        <div class="r-progress-meta">
+          <span class="r-progress-label">Report progress</span>
+          <span class="r-progress-steps" id="r-stepCounter">1 / 4</span>
+        </div>
+        <div class="r-progress-track">
+          <div class="r-progress-fill" id="r-progressFill" style="width:25%"></div>
+        </div>
+        <div class="r-step-dots" id="r-stepDots">
+          <div class="r-dot active"></div>
+          <div class="r-dot"></div>
+          <div class="r-dot"></div>
+          <div class="r-dot"></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-step active" id="r-step1">
+          <div class="r-step-title">Type of Incident</div>
+          <div class="r-step-sub">Select the category that best describes what happened</div>
+          <div class="r-incident-grid">
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Robbery')"><span class="r-incident-icon">🔪</span><span class="r-incident-label">Robbery</span><span class="r-incident-desc">Theft with force</span></button>
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Vandalism')"><span class="r-incident-icon">🔨</span><span class="r-incident-label">Vandalism</span><span class="r-incident-desc">Property damage</span></button>
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Suspicious Activity')"><span class="r-incident-icon">👁️</span><span class="r-incident-label">Suspicious</span><span class="r-incident-desc">Unusual behavior</span></button>
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Assault')"><span class="r-incident-icon">⚠️</span><span class="r-incident-label">Assault</span><span class="r-incident-desc">Physical threat</span></button>
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Trespassing')"><span class="r-incident-icon">🚫</span><span class="r-incident-label">Trespassing</span><span class="r-incident-desc">Unauthorized entry</span></button>
+            <button class="r-incident-btn" onclick="rSelectIncident(this,'Other')"><span class="r-incident-icon">📋</span><span class="r-incident-label">Other</span><span class="r-incident-desc">Something else</span></button>
+          </div>
+        </div>
+        <div class="r-step" id="r-step2">
+          <div class="r-step-title">Describe the Incident</div>
+          <div class="r-step-sub">Provide as much detail as possible</div>
+          <label class="r-field-label">What happened?</label>
+          <textarea id="r-description" rows="6" placeholder="Describe the sequence of events, any persons involved, items stolen or damaged, and anything else relevant to the incident..."></textarea>
+        </div>
+        <div class="r-step" id="r-step3">
+          <div class="r-step-title">Add Evidence</div>
+          <div class="r-step-sub">Location and photo help investigators respond faster</div>
+          <div class="r-action-row">
+            <button class="r-action-btn" id="r-locationBtn" onclick="rAddLocation()"><span class="r-action-icon">📍</span><span class="r-action-label">Add Location</span></button>
+            <button class="r-action-btn" id="r-photoBtn" onclick="rAddPhoto()"><span class="r-action-icon">📷</span><span class="r-action-label">Upload Photo</span></button>
+          </div>
+          <input type="file" id="r-photoInput" accept="image/*" style="display:none" onchange="rPhotoSelected()">
+          <div id="r-locationStatus" style="display:none; margin-top:16px;">
+            <div class="r-review-item">
+              <div class="r-review-key">Location captured</div>
+              <div class="r-review-val" id="r-locationText" style="font-size:12px; font-family:'DM Mono',monospace; color:#22c55e"></div>
+            </div>
+          </div>
+        </div>
+        <div class="r-step" id="r-step4">
+          <div class="r-step-title">Review & Send</div>
+          <div class="r-step-sub">Confirm everything looks correct before submitting</div>
+          <div class="r-review-item"><div class="r-review-key">Incident type</div><div class="r-review-val"><span class="r-tag" id="r-reviewType">—</span></div></div>
+          <div class="r-review-item"><div class="r-review-key">Description</div><div class="r-review-val" id="r-reviewDesc" style="font-size:13px;font-weight:400;color:#6b7280">—</div></div>
+          <div class="r-review-item"><div class="r-review-key">Evidence</div><div class="r-review-val" id="r-reviewEvidence" style="font-size:13px;font-weight:400;color:#6b7280">—</div></div>
+        </div>
+      </div>
+      <div class="r-footer">
+        <button class="r-back-btn" id="r-backBtn" onclick="rPrevStep()" disabled>← Back</button>
+        <button class="r-next-btn" id="r-nextBtn" onclick="rNextStep()">Next →</button>
+      </div>
+    </div>
+    <div class="r-success-screen" id="r-successScreen">
+      <div class="r-card" style="text-align:center;padding:48px 32px;">
+        <div class="r-success-ring">✓</div>
+        <div class="r-success-title">Report Sent</div>
+        <div class="r-success-sub">Your incident has been logged and<br>authorities have been notified.</div>
+        <div class="r-report-id" id="r-reportId">REF #INC-000000</div>
+        <button class="r-back-btn" style="margin-top:28px;display:inline-block;cursor:pointer;" onclick="rResetForm()">Submit Another Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 3: MAPA ===== -->
+<div class="page" id="page-mapa">
+  <div id="m-map-container">
+    <div class="m-grid-overlay"></div>
+    <div class="m-scanline"></div>
+    <svg id="m-svg-map" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="m-glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="m-bgGrad" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" style="stop-color:#0a1728;stop-opacity:1"/>
+          <stop offset="100%" style="stop-color:#040810;stop-opacity:1"/>
+        </radialGradient>
+      </defs>
+      <rect width="900" height="600" fill="url(#m-bgGrad)"/>
+      <path class="m-state" d="M 68 85 L 78 60 L 95 55 L 110 70 L 108 95 L 95 120 L 78 115 Z"/>
+      <path class="m-state" d="M 85 145 L 92 130 L 105 128 L 115 145 L 110 185 L 98 210 L 88 205 L 82 180 Z"/>
+      <path class="m-state" d="M 110 70 L 160 58 L 190 68 L 195 90 L 185 120 L 170 135 L 140 140 L 120 130 L 108 110 Z"/>
+      <path class="m-state" d="M 190 68 L 255 65 L 275 85 L 270 130 L 250 155 L 220 160 L 195 150 L 185 120 L 195 90 Z"/>
+      <path class="m-state" d="M 160 140 L 185 135 L 195 150 L 190 180 L 175 210 L 155 220 L 140 205 L 142 175 Z"/>
+      <path class="m-state" d="M 195 150 L 250 155 L 265 175 L 255 205 L 230 215 L 205 210 L 190 195 L 190 180 Z"/>
+      <path class="m-state" d="M 270 130 L 340 118 L 360 135 L 355 175 L 330 195 L 300 200 L 265 190 L 255 170 L 265 150 Z"/>
+      <path class="m-state" d="M 340 175 L 365 165 L 385 178 L 390 205 L 375 225 L 348 230 L 330 215 L 330 200 Z"/>
+      <path class="m-state" d="M 360 135 L 400 128 L 420 148 L 425 185 L 415 225 L 390 240 L 375 230 L 385 205 L 370 175 L 355 165 Z"/>
+      <path class="m-state" d="M 255 200 L 295 198 L 315 215 L 308 248 L 285 260 L 258 258 L 245 240 L 245 220 Z"/>
+      <path class="m-state" d="M 308 215 L 345 208 L 368 225 L 368 260 L 348 275 L 320 275 L 300 262 L 300 248 Z"/>
+      <path class="m-state" d="M 210 215 L 235 210 L 248 225 L 245 252 L 228 260 L 212 252 L 205 238 Z"/>
+      <path class="m-state" d="M 228 258 L 265 258 L 300 265 L 308 295 L 295 325 L 268 330 L 242 318 L 225 298 L 222 275 Z"/>
+      <path class="m-state" d="M 240 325 L 258 318 L 272 328 L 270 348 L 252 352 L 238 342 Z"/>
+      <path class="m-state" d="M 278 248 L 298 245 L 308 258 L 302 272 L 285 275 L 275 265 Z"/>
+      <path class="m-state" d="M 305 265 L 348 265 L 368 282 L 362 315 L 338 325 L 308 318 L 295 302 L 296 280 Z"/>
+      <path class="m-state" d="M 345 260 L 375 258 L 390 272 L 385 300 L 365 310 L 342 308 L 338 288 Z"/>
+      <path class="m-state" d="M 375 270 L 405 265 L 420 280 L 418 308 L 398 320 L 375 318 L 365 305 L 370 288 Z"/>
+      <path class="m-state" d="M 300 320 L 345 322 L 375 335 L 378 368 L 358 385 L 325 388 L 295 372 L 280 350 L 288 335 Z"/>
+      <path class="m-state" d="M 360 308 L 398 308 L 418 325 L 415 355 L 390 368 L 362 365 L 350 350 L 350 330 Z"/>
+      <path class="m-state" d="M 385 340 L 398 335 L 408 342 L 408 358 L 395 365 L 383 358 Z" style="fill:#0d1f30"/>
+      <path class="m-state" d="M 375 365 L 405 362 L 418 378 L 410 398 L 385 400 L 372 388 Z"/>
+      <path class="m-state" d="M 408 320 L 425 318 L 432 330 L 428 345 L 412 348 L 405 335 Z"/>
+      <path class="m-state" d="M 415 318 L 455 312 L 478 328 L 480 360 L 462 385 L 435 390 L 412 375 L 412 350 L 425 338 Z"/>
+      <path class="m-state" d="M 420 265 L 455 258 L 480 272 L 498 308 L 495 355 L 478 385 L 455 398 L 435 388 L 432 360 L 450 335 L 450 305 L 430 290 Z"/>
+      <path class="m-state" d="M 348 385 L 395 385 L 420 402 L 430 435 L 415 458 L 385 462 L 358 452 L 340 428 L 342 408 Z"/>
+      <path class="m-state" d="M 428 388 L 478 385 L 510 395 L 525 428 L 518 462 L 492 478 L 458 475 L 428 460 L 420 438 L 422 415 Z"/>
+      <path class="m-state" d="M 480 418 L 525 415 L 560 425 L 578 455 L 572 490 L 545 502 L 510 498 L 485 482 L 478 458 L 478 435 Z"/>
+      <path class="m-state" d="M 490 375 L 530 368 L 552 382 L 555 408 L 535 420 L 505 418 L 488 405 Z"/>
+      <path class="m-state" d="M 540 355 L 580 348 L 605 368 L 608 405 L 588 428 L 558 430 L 540 418 L 538 395 L 548 375 Z"/>
+      <path class="m-state" d="M 575 312 L 628 305 L 655 320 L 658 355 L 640 372 L 605 375 L 575 362 L 565 342 Z"/>
+      <path class="m-state" d="M 635 318 L 672 312 L 688 335 L 685 390 L 665 415 L 640 418 L 622 400 L 618 368 L 628 345 Z"/>
+      <text x="45" y="300" fill="rgba(0,200,255,0.12)" font-family="Rajdhani,sans-serif" font-size="13" letter-spacing="3" transform="rotate(-90,45,300)">OCÉANO PACÍFICO</text>
+      <text x="500" y="180" fill="rgba(0,200,255,0.12)" font-family="Rajdhani,sans-serif" font-size="13" letter-spacing="3">GOLFO DE MÉXICO</text>
+      <text x="648" y="280" fill="rgba(0,200,255,0.12)" font-family="Rajdhani,sans-serif" font-size="11" letter-spacing="2">MAR CARIBE</text>
+      <g fill="rgba(0,200,255,0.5)" filter="url(#m-glow)">
+        <circle cx="395" cy="348" r="3"/>
+        <circle cx="270" cy="278" r="2.5"/>
+        <circle cx="368" cy="198" r="2.5"/>
+        <circle cx="140" cy="95" r="2"/>
+        <circle cx="518" cy="380" r="2"/>
+        <circle cx="616" cy="335" r="2"/>
+      </g>
+      <text x="400" y="345" fill="rgba(0,200,255,0.5)" font-family="JetBrains Mono" font-size="9" letter-spacing="1">CDMX</text>
+      <text x="255" y="274" fill="rgba(0,200,255,0.4)" font-family="JetBrains Mono" font-size="8" letter-spacing="1">GDL</text>
+      <text x="375" y="195" fill="rgba(0,200,255,0.4)" font-family="JetBrains Mono" font-size="8" letter-spacing="1">MTY</text>
+      <text x="122" y="92" fill="rgba(0,200,255,0.4)" font-family="JetBrains Mono" font-size="7" letter-spacing="1">TIJ</text>
+      <text x="524" y="377" fill="rgba(0,200,255,0.4)" font-family="JetBrains Mono" font-size="7" letter-spacing="1">VHM</text>
+      <text x="620" y="332" fill="rgba(0,200,255,0.4)" font-family="JetBrains Mono" font-size="7" letter-spacing="1">MID</text>
+    </svg>
+    <div id="m-markers"></div>
+  </div>
+
+  <header id="m-header">
+    <div class="m-logo">
+      <div class="m-logo-icon">🛡️</div>
+      <div>
+        <div class="m-logo-text">SEGURO MX</div>
+        <div class="m-logo-sub">Red de Seguridad Ciudadana</div>
+      </div>
+    </div>
+    <div class="m-header-right">
+      <div class="m-live-badge"><div class="m-live-dot"></div>EN VIVO</div>
+      <div class="m-stat-chip"><div><div class="num">347</div><div class="lbl">Reportes hoy</div></div></div>
+      <div class="m-stat-chip"><div><div class="num" style="color:#22c55e">12,840</div><div class="lbl">Usuarios activos</div></div></div>
+    </div>
+  </header>
+
+  <div class="m-alert-ribbon">
+    <span class="m-ribbon-icon">⚠</span>
+    <div class="m-ribbon-scroll">
+      <span class="m-ribbon-item">ALERTA: Bloqueo vial en Autopista México-Toluca Km 58 <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">AVISO: Actividad sospechosa reportada en Col. Roma Norte, CDMX <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">INFO: Patrulla activa en Zona Centro, Guadalajara <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">ALERTA: Falla eléctrica en sector norte de Monterrey <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">AVISO: Zona de riesgo activa en Tijuana, Baja California <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">ALERTA: Bloqueo vial en Autopista México-Toluca Km 58 <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">AVISO: Actividad sospechosa reportada en Col. Roma Norte, CDMX <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">INFO: Patrulla activa en Zona Centro, Guadalajara <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">ALERTA: Falla eléctrica en sector norte de Monterrey <span class="m-ribbon-sep"> • </span></span>
+      <span class="m-ribbon-item">AVISO: Zona de riesgo activa en Tijuana, Baja California <span class="m-ribbon-sep"> • </span></span>
+    </div>
+  </div>
+
+  <div class="m-controls">
+    <button class="m-ctrl-btn" onclick="mZoomIn()">+</button>
+    <button class="m-ctrl-btn" onclick="mZoomOut()">−</button>
+    <div class="m-ctrl-divider"></div>
+    <button class="m-ctrl-btn" onclick="mCenterMap()">📍</button>
+    <div class="m-ctrl-divider"></div>
+    <button class="m-ctrl-btn">⊞</button>
+    <button class="m-ctrl-btn">⚙</button>
+  </div>
+
+  <div class="m-compass">🧭</div>
+
+  <div class="m-legend">
+    <div class="m-legend-title"><span style="color:#00c8ff">◆</span> LEYENDA</div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#ff3b5c;box-shadow:0 0 8px rgba(255,59,92,0.5)"></div><span class="m-legend-label">Riesgo delictivo</span><span class="m-legend-count">47</span></div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#ff8c00;box-shadow:0 0 8px rgba(255,140,0,0.5)"></div><span class="m-legend-label">Bloqueo vial</span><span class="m-legend-count">23</span></div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#f5c518;box-shadow:0 0 8px rgba(245,197,24,0.5)"></div><span class="m-legend-label">Falla eléctrica</span><span class="m-legend-count">18</span></div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#a78bfa;box-shadow:0 0 8px rgba(167,139,250,0.5)"></div><span class="m-legend-label">Alumbrado roto</span><span class="m-legend-count">31</span></div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#fb7185;box-shadow:0 0 8px rgba(251,113,133,0.5)"></div><span class="m-legend-label">Actividad sospechosa</span><span class="m-legend-count">29</span></div>
+    <div class="m-legend-item"><div class="m-legend-dot" style="background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.5)"></div><span class="m-legend-label">Patrulla activa</span><span class="m-legend-count">12</span></div>
+  </div>
+
+  <div class="m-bottom-bar">
+    <div class="m-bottom-stat"><span class="n" style="color:#ff3b5c">47</span><span class="l">Delictivos</span></div>
+    <div class="m-bottom-stat"><span class="n" style="color:#ff8c00">23</span><span class="l">Bloqueos</span></div>
+    <div class="m-bottom-stat"><span class="n" style="color:#f5c518">18</span><span class="l">Eléctricas</span></div>
+    <div class="m-bottom-stat"><span class="n" style="color:#a78bfa">31</span><span class="l">Alumbrado</span></div>
+    <div class="m-bottom-stat"><span class="n" style="color:#fb7185">29</span><span class="l">Sospechosos</span></div>
+    <div class="m-bottom-stat"><span class="n" style="color:#22c55e">12</span><span class="l">Patrullas</span></div>
+  </div>
+
+  <div class="m-info-card" id="m-infoCard">
+    <div class="m-card-top-line" id="m-cardTopLine"></div>
+    <div class="m-card-header">
+      <div class="m-card-type"><div class="m-card-type-dot" id="m-cardTypeDot"></div><span id="m-cardTypeText"></span></div>
+      <div class="m-card-priority" id="m-cardPriority"></div>
+    </div>
+    <div class="m-card-desc" id="m-cardDesc"></div>
+    <div class="m-card-meta">
+      <div class="m-card-meta-item"><span class="m-meta-label">Hora</span><span class="m-meta-value" id="m-cardTime"></span></div>
+      <div class="m-card-meta-item"><span class="m-meta-label">Prioridad</span><span class="m-meta-value" id="m-cardPriorityText"></span></div>
+      <div class="m-card-meta-item" style="grid-column:1/-1"><span class="m-meta-label">Ubicación</span><span class="m-meta-value" id="m-cardLocation"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav id="nav">
+  <button class="nav-btn active" id="nav-contactos" style="--nav-color:#ff2e2e" onclick="showPage('contactos')">
+    <span class="nav-icon">🚨</span>
+    Contactos
+  </button>
+  <button class="nav-btn" id="nav-report" style="--nav-color:#ff4d4d" onclick="showPage('report')">
+    <span class="nav-icon">📋</span>
+    Reporte
+  </button>
+  <button class="nav-btn" id="nav-mapa" style="--nav-color:#00c8ff" onclick="showPage('mapa')">
+    <span class="nav-icon">🗺️</span>
+    Mapa
+  </button>
+</nav>
+
+<script>
+// ========== NAVIGATION ==========
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+}
+
+// ========== REPORT LOGIC ==========
+let rCurrentStep = 1;
+const rTotalSteps = 4;
+let rSelectedIncident = '';
+let rLocationAdded = false;
+let rPhotoAdded = false;
+const rSteps = ['r-step1','r-step2','r-step3','r-step4'];
+const rProgress = [25, 50, 75, 100];
+
+function rUpdateUI() {
+  rSteps.forEach((s, i) => document.getElementById(s).classList.toggle('active', i + 1 === rCurrentStep));
+  document.getElementById('r-progressFill').style.width = rProgress[rCurrentStep - 1] + '%';
+  document.getElementById('r-stepCounter').textContent = `${rCurrentStep} / ${rTotalSteps}`;
+  const dots = document.querySelectorAll('.r-dot');
+  dots.forEach((d, i) => { d.className = 'r-dot'; if (i+1 < rCurrentStep) d.classList.add('done'); else if (i+1 === rCurrentStep) d.classList.add('active'); });
+  document.getElementById('r-backBtn').disabled = rCurrentStep === 1;
+  document.getElementById('r-nextBtn').textContent = rCurrentStep === rTotalSteps ? 'Send Report 🔒' : 'Next →';
+}
+
+function rSelectIncident(el, name) {
+  document.querySelectorAll('.r-incident-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  rSelectedIncident = name;
+}
+
+function rNextStep() {
+  if (rCurrentStep === 1 && !rSelectedIncident) return;
+  if (rCurrentStep === 4) { rSendReport(); return; }
+  if (rCurrentStep === 3) {
+    document.getElementById('r-reviewType').textContent = rSelectedIncident;
+    const desc = document.getElementById('r-description').value.trim();
+    document.getElementById('r-reviewDesc').textContent = desc || 'No description provided';
+    let ev = [];
+    if (rLocationAdded) ev.push('📍 Location');
+    if (rPhotoAdded) ev.push('📷 Photo');
+    document.getElementById('r-reviewEvidence').textContent = ev.length ? ev.join('  ·  ') : 'No evidence added';
+  }
+  rCurrentStep++;
+  rUpdateUI();
+}
+
+function rPrevStep() { if (rCurrentStep > 1) { rCurrentStep--; rUpdateUI(); } }
+
+function rAddLocation() {
+  const btn = document.getElementById('r-locationBtn');
+  btn.innerHTML = `<span class="r-action-icon">⏳</span><span class="r-action-label">Getting GPS...</span>`;
+  setTimeout(() => {
+    rLocationAdded = true;
+    btn.className = 'r-action-btn done';
+    btn.innerHTML = `<span class="r-action-icon">✅</span><span class="r-action-label">Location Added</span>`;
+    document.getElementById('r-locationStatus').style.display = 'block';
+    const lat = (18.98 + Math.random()*0.01).toFixed(5);
+    const lng = (-99.23 + Math.random()*0.01).toFixed(5);
+    document.getElementById('r-locationText').textContent = `${lat}° N, ${lng}° W  ·  Accuracy: ±12m`;
+  }, 1500);
+}
+
+function rAddPhoto() { document.getElementById('r-photoInput').click(); }
+
+function rPhotoSelected() {
+  const file = document.getElementById('r-photoInput').files[0];
+  if (file) {
+    rPhotoAdded = true;
+    const btn = document.getElementById('r-photoBtn');
+    btn.className = 'r-action-btn done';
+    btn.innerHTML = `<span class="r-action-icon">✅</span><span class="r-action-label">${file.name.slice(0,16)}</span>`;
+  }
+}
+
+function rSendReport() {
+  document.getElementById('r-nextBtn').textContent = 'Sending...';
+  document.getElementById('r-nextBtn').style.opacity = '0.6';
+  setTimeout(() => {
+    document.getElementById('r-mainContent').style.display = 'none';
+    const id = 'INC-' + Math.floor(100000 + Math.random()*900000);
+    document.getElementById('r-reportId').textContent = `REF #${id}`;
+    document.getElementById('r-successScreen').classList.add('show');
+  }, 1800);
+}
+
+function rResetForm() {
+  rCurrentStep = 1; rSelectedIncident = ''; rLocationAdded = false; rPhotoAdded = false;
+  document.getElementById('r-description').value = '';
+  document.querySelectorAll('.r-incident-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('r-locationBtn').className = 'r-action-btn';
+  document.getElementById('r-locationBtn').innerHTML = `<span class="r-action-icon">📍</span><span class="r-action-label">Add Location</span>`;
+  document.getElementById('r-photoBtn').className = 'r-action-btn';
+  document.getElementById('r-photoBtn').innerHTML = `<span class="r-action-icon">📷</span><span class="r-action-label">Upload Photo</span>`;
+  document.getElementById('r-locationStatus').style.display = 'none';
+  document.getElementById('r-nextBtn').textContent = 'Next →';
+  document.getElementById('r-nextBtn').style.opacity = '1';
+  document.getElementById('r-successScreen').classList.remove('show');
+  document.getElementById('r-mainContent').style.display = 'block';
+  rUpdateUI();
+}
+
+// ========== MAP LOGIC ==========
+const mMapData = [
+  { type:'m-crime', icon:'⚠', x:'43.5%', y:'57.8%', title:'Riesgo Delictivo', desc:'Reportes de asalto a transeúntes en la zona. Se recomienda evitar el área nocturna.', time:'hace 8 min', location:'Col. Roma Norte, CDMX', priority:'ALTO', priorityClass:'m-priority-high', color:'#ff3b5c' },
+  { type:'m-crime', icon:'⚠', x:'30%', y:'45%', title:'Riesgo Delictivo', desc:'Robo de vehículos en estacionamiento público. 3 reportes en la última hora.', time:'hace 15 min', location:'Zapopan, Jalisco', priority:'ALTO', priorityClass:'m-priority-high', color:'#ff3b5c' },
+  { type:'m-crime', icon:'⚠', x:'15%', y:'17%', title:'Riesgo Delictivo', desc:'Zona con alertas activas por actividad criminal organizada.', time:'hace 22 min', location:'Tijuana, B.C.', priority:'CRÍTICO', priorityClass:'m-priority-high', color:'#ff3b5c' },
+  { type:'m-crime', icon:'⚠', x:'40%', y:'33%', title:'Riesgo Delictivo', desc:'Asalto con violencia cerca del centro comercial. Policía en camino.', time:'hace 5 min', location:'Monterrey, N.L.', priority:'ALTO', priorityClass:'m-priority-high', color:'#ff3b5c' },
+  { type:'m-crime', icon:'⚠', x:'56%', y:'65%', title:'Riesgo Delictivo', desc:'Zona de alta incidencia reportada por la comunidad local.', time:'hace 41 min', location:'Oaxaca, Oaxaca', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#ff3b5c' },
+  { type:'m-road', icon:'🚧', x:'21%', y:'37%', title:'Bloqueo Vial', desc:'Manifestación bloqueando vía principal. Desvío habilitado por Av. Vallarta.', time:'hace 12 min', location:'Autopista Guadalajara-Tepic', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#ff8c00' },
+  { type:'m-road', icon:'🚧', x:'44%', y:'52%', title:'Bloqueo Vial', desc:'Accidente de tráfico. Dos carriles bloqueados. Tiempo estimado: 30 min.', time:'hace 3 min', location:'Autopista México-Toluca Km 58', priority:'ALTO', priorityClass:'m-priority-high', color:'#ff8c00' },
+  { type:'m-road', icon:'🚧', x:'63%', y:'60%', title:'Bloqueo Vial', desc:'Obras de pavimentación. Circulación reducida a un carril.', time:'hace 1 hr', location:'Villahermosa, Tabasco', priority:'BAJO', priorityClass:'m-priority-low', color:'#ff8c00' },
+  { type:'m-power', icon:'⚡', x:'38%', y:'34%', title:'Falla Eléctrica', desc:'Corte de luz en sector norte. CFE reporta restablecimiento en 2 horas.', time:'hace 35 min', location:'Monterrey Norte, N.L.', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#f5c518' },
+  { type:'m-power', icon:'⚡', x:'68%', y:'52%', title:'Falla Eléctrica', desc:'Apagón por tormenta eléctrica. Afecta 3 colonias.', time:'hace 18 min', location:'Mérida, Yucatán', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#f5c518' },
+  { type:'m-power', icon:'⚡', x:'48%', y:'58%', title:'Falla Eléctrica', desc:'Transformador dañado. Servicio parcial en la zona.', time:'hace 50 min', location:'Puebla Centro', priority:'BAJO', priorityClass:'m-priority-low', color:'#f5c518' },
+  { type:'m-light', icon:'💡', x:'45%', y:'59%', title:'Alumbrado Roto', desc:'4 postes de luz sin funcionar en calle principal. Zona oscura de noche.', time:'hace 2 hr', location:'Coyoacán, CDMX', priority:'BAJO', priorityClass:'m-priority-low', color:'#a78bfa' },
+  { type:'m-light', icon:'💡', x:'26%', y:'44%', title:'Alumbrado Roto', desc:'Alumbrado deficiente en parque. Reportado como zona insegura.', time:'hace 4 hr', location:'Guadalajara, Jalisco', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#a78bfa' },
+  { type:'m-light', icon:'💡', x:'33%', y:'52%', title:'Alumbrado Roto', desc:'Calle sin iluminación desde hace 3 días. 8 reportes comunitarios.', time:'hace 3 hr', location:'León, Guanajuato', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#a78bfa' },
+  { type:'m-suspicious', icon:'👁', x:'42%', y:'55%', title:'Actividad Sospechosa', desc:'Personas merodeando en el área. Varios vecinos han reportado comportamiento extraño.', time:'hace 6 min', location:'Iztapalapa, CDMX', priority:'ALTO', priorityClass:'m-priority-high', color:'#fb7185' },
+  { type:'m-suspicious', icon:'👁', x:'58%', y:'62%', title:'Actividad Sospechosa', desc:'Vehículo estacionado sin placa visible por más de 4 horas.', time:'hace 28 min', location:'Tuxtla Gutiérrez, Chiapas', priority:'MEDIO', priorityClass:'m-priority-medium', color:'#fb7185' },
+  { type:'m-suspicious', icon:'👁', x:'52%', y:'41%', title:'Actividad Sospechosa', desc:'Movimiento inusual reportado cerca de banco. Policía alertada.', time:'hace 11 min', location:'Veracruz, Ver.', priority:'ALTO', priorityClass:'m-priority-high', color:'#fb7185' },
+  { type:'m-patrol', icon:'🚔', x:'44%', y:'57%', title:'Patrulla Activa', desc:'Unidad policial patrullando activamente el sector. Zona segura en este momento.', time:'Ahora', location:'Benito Juárez, CDMX', priority:'INFO', priorityClass:'m-priority-low', color:'#22c55e' },
+  { type:'m-patrol', icon:'🚔', x:'29%', y:'46%', title:'Patrulla Activa', desc:'Operativo preventivo nocturno en curso. Presencia policial alta.', time:'hace 2 min', location:'Centro, Guadalajara', priority:'INFO', priorityClass:'m-priority-low', color:'#22c55e' },
+  { type:'m-patrol', icon:'🚔', x:'67%', y:'54%', title:'Patrulla Activa', desc:'Patrulla comunitaria activa. Cobertura hasta las 06:00 hrs.', time:'hace 8 min', location:'Mérida Centro, Yucatán', priority:'INFO', priorityClass:'m-priority-low', color:'#22c55e' },
+];
+
+const mContainer = document.getElementById('m-markers');
+const mCard = document.getElementById('m-infoCard');
+
+mMapData.forEach((d, i) => {
+  const el = document.createElement('div');
+  el.className = `m-marker ${d.type}`;
+  el.style.left = d.x;
+  el.style.top = d.y;
+  el.style.animationDelay = `${i * 0.05}s`;
+  el.innerHTML = `<div class="m-marker-pin"><span class="m-icon">${d.icon}</span></div>`;
+  el.addEventListener('mouseenter', (e) => mShowCard(e, d, el));
+  el.addEventListener('mouseleave', mHideCard);
+  el.addEventListener('click', (e) => mShowCard(e, d, el));
+  mContainer.appendChild(el);
+});
+
+function mShowCard(e, d, el) {
+  const rect = el.getBoundingClientRect();
+  document.getElementById('m-cardTypeText').textContent = d.title;
+  document.getElementById('m-cardTypeDot').style.background = d.color;
+  document.getElementById('m-cardTypeDot').style.boxShadow = `0 0 8px ${d.color}`;
+  document.getElementById('m-cardDesc').textContent = d.desc;
+  document.getElementById('m-cardTime').textContent = d.time;
+  document.getElementById('m-cardLocation').textContent = d.location;
+  document.getElementById('m-cardPriority').textContent = d.priority;
+  document.getElementById('m-cardPriority').className = `m-card-priority ${d.priorityClass}`;
+  document.getElementById('m-cardPriorityText').textContent = d.priority;
+  document.getElementById('m-cardTopLine').style.background = d.color;
+  let left = rect.left + 40;
+  let top = rect.top - 20;
+  if (left + 270 > window.innerWidth) left = rect.left - 275;
+  if (top + 200 > window.innerHeight) top = window.innerHeight - 220;
+  if (top < 80) top = 80;
+  mCard.style.left = left + 'px';
+  mCard.style.top = top + 'px';
+  mCard.style.display = 'block';
+  setTimeout(() => mCard.classList.add('visible'), 10);
+}
+
+function mHideCard() {
+  mCard.classList.remove('visible');
+  setTimeout(() => { mCard.style.display = 'none'; }, 200);
+}
+
+let mZoom = 1;
+const mSvgMap = document.getElementById('m-svg-map');
+function mZoomIn()    { mZoom = Math.min(mZoom + 0.25, 3); mSvgMap.style.transform = `scale(${mZoom})`; }
+function mZoomOut()   { mZoom = Math.max(mZoom - 0.25, 0.6); mSvgMap.style.transform = `scale(${mZoom})`; }
+function mCenterMap() {
+  mZoom = 1; mSvgMap.style.transform = 'scale(1)';
+  const flash = document.createElement('div');
+  flash.style.cssText = 'position:fixed;inset:0;background:rgba(0,200,255,0.05);pointer-events:none;z-index:500;animation:mFadeOut 0.5s ease forwards;';
+  document.body.appendChild(flash);
+  const style = document.createElement('style');
+  style.textContent = '@keyframes mFadeOut{from{opacity:1}to{opacity:0}}';
+  document.head.appendChild(style);
+  setTimeout(() => flash.remove(), 500);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === '+' || e.key === '=') mZoomIn();
+  if (e.key === '-') mZoomOut();
+  if (e.key === 'Escape') mHideCard();
+});
+</script>
+</body>
+</html>
